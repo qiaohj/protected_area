@@ -31,3 +31,14 @@ realms<-st_read("../../Shape/Biogeographic_realms/Biogeographic_realms_clip_moll
 r<-fasterize(realms, mask, field="REALM_ID")
 writeRaster(r, "../../Raster/Realms/realms.tif", overwrite=T)
 plot(r)
+
+
+china_pa<-st_read("../../RAW/China_PAs/China_pas.shp")
+china_pa_moll<-st_transform(china_pa, crs=crs(mask))
+colnames(china_pa_moll)[c(13,14,16:23)]<-paste("c", c(13,14,16:23), sep="_")
+st_write(china_pa_moll, "../../Shape/WDPA/China_PAs_moll.shp",delete_layer = TRUE)
+
+unique(china_pa_moll$c_14)
+r<-fasterize(china_pa_moll[which(!is.na(china_pa_moll$c_14)),], mask)
+writeRaster(r, "../../Raster/China_PAs/China_PAs.tif", overwrite = TRUE)
+plot(r)
