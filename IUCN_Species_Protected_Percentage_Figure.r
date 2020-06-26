@@ -24,6 +24,8 @@ result[which(result$all_area==0),]
 result$percentile<-result$protected/result$all_area
 write.csv(result, "../../Tables/PA_coverage.csv", row.names = F)
 
+
+result<-read.csv("../../Tables/PA_coverage.csv", head=T, sep = ",")
 ggplot(result, aes(percentile)) + geom_density()
 
 ggdiamonds = ggplot(result, aes(percentile, all_area)) +
@@ -44,3 +46,8 @@ ggdiamonds = ggplot(diamonds, aes(x, depth)) +
 plot_gg(ggdiamonds,multicore=TRUE,width=5,height=5,scale=250,windowsize=c(1400,866),
         zoom = 0.55, phi = 30)
 render_snapshot()
+
+
+no_protected<-result%>%dplyr::filter(protected<=1)
+
+no_protected%>%group_by(group)%>%count()
